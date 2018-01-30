@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>1.封装选项卡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .box {
+            margin: 50px auto;
+            width: 700px;
+        }
+
+        ul {
+            list-style: none;
+            overflow: hidden;
+        }
+
+        .box li {
+            float: left;
+            border: 1px solid black;
+            width: 200px;
+            height: 50px;
+            margin-right: 10px;
+            line-height: 50px;
+            text-align: center;
+            background: aquamarine;
+            border-radius: 10px;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+
+        .box ul li.lis {
+            background: red;
+        }
+
+        .box div {
+            display: none;
+            border: 1px solid black;
+            width: 100%;
+            height: 200px;
+            line-height: 200px;
+            text-align: center;
+            background: pink;
+            border-radius: 10px;
+        }
+
+        .box > .lis {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div id="box" class="box">
+    <ul>
+        <li class="lis">电视剧</li>
+        <li>综艺节目</li>
+        <li>电影</li>
+    </ul>
+    <div class="lis">夏至未至</div>
+    <div>奔跑吧</div>
+    <div>死神来了</div>
+</div>
+
+<div id="box2" class="box">
+    <ul>
+        <li class="lis">电视剧</li>
+        <li>综艺节目</li>
+        <li>电影</li>
+    </ul>
+    <div class="lis">夏至未至</div>
+    <div>奔跑吧</div>
+    <div>死神来了</div>
+</div>
+
+<div id="box3" class="box">
+    <ul>
+        <li class="lis">电视剧</li>
+        <li>综艺节目</li>
+        <li>电影</li>
+    </ul>
+    <div class="lis">夏至未至</div>
+    <div>奔跑吧</div>
+    <div>死神来了</div>
+</div>
+
+<script>
+    function Tab(options) {
+        this.el = options.el;//将外部传进的id保存到私有的实例中
+        this.select = options.select || 0;
+        this.init();//触发器
+
+    }
+    //获取操作元素
+    Tab.prototype.getEle = function () { //getEle this 是当前实例
+        var container = document.getElementById(this.el);//根据保存id获取到最外层容器
+        this.lis = container.getElementsByTagName("li");//将li元素集合保护到实例属性中
+        console.log(this.lis);
+        this.div1 = container.getElementsByTagName("div");//将div元素集合保存到实例属性中
+        this.l = this.lis.length;//保存length 长度
+        return this;
+    };
+
+    //绑定元素事件
+    Tab.prototype.bindEvent = function () {//bindEven this是当前实例
+        var that = this;//将当前实例 缓存给that这个私有白能量 为了 在事件中使用
+        for (var i = 0; i < this.l; i++) {
+            this.lis[i].n = i;
+            this.lis[i].onclick = function () {//事件中this 是当前元素
+                that.removeClass().changeTab(this.n);//清空样式 和切换div
+            }
+        }
+        return this;
+    };
+    //清空原有的选中样式
+
+    Tab.prototype.removeClass = function () {
+        for (var i = 0; i < this.l; i++) {
+            this.lis[i].className = "";
+            this.div1[i].className = "";
+        }
+        return this;
+    };
+
+    //    切换选中
+
+    Tab.prototype.changeTab = function (n) {//changeaTab this是当前实例
+        this.lis[n].className = "lis";
+        this.div1[n].className = "lis";
+        return this;
+    };
+
+    //获取操作元素
+    Tab.prototype.init = function () {//this ，init是当前的实例
+        this.getEle().bindEvent();//获取操作元素 和获取绑定元素
+        if (this.select > this.l - 1) {//是否大于最后一索引
+            this.select = 0;
+        }
+        //默认切换控制
+        this.removeClass().changeTab(this.select);
+    };
+
+    new Tab({
+        el: "box",//容器
+        select: 2//默认选中设置
+    });
+    new Tab({
+        el: "box2",
+        select: 1
+    });
+    new Tab({
+        el: "box3",
+        select: 0
+    })
+</script>
+</body>
+</html>
